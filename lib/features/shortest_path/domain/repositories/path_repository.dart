@@ -2,9 +2,10 @@ import 'package:shortest_path_finder/features/shortest_path/domain/entities/path
 import 'package:shortest_path_finder/features/shortest_path/domain/entities/path_task.dart';
 
 abstract interface class PathRepository {
-  Future<List<PathTask>> getTasks();
+  Future<List<PathTask>> getTasks(String apiUrl);
 
   Future<List<SubmissionResult>> submitResults(
+    String apiUrl,
     List<PathResult> results,
   );
 }

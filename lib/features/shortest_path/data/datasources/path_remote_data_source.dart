@@ -1,15 +1,17 @@
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/api_client.dart';
 import '../models/api_response_model.dart';
 import '../models/path_result_model.dart';
 import '../models/path_task_model.dart';
 import '../models/submission_result_model.dart';
 
 abstract interface class PathRemoteDataSource {
-  Future<List<PathTaskModel>> getTasks();
+  Future<List<PathTaskModel>> getTasks(String apiUrl);
 
   Future<List<SubmissionResultModel>> submitResults(
+    String apiUrl,
     List<PathResultModel> results,
   );
 }
@@ -20,8 +22,10 @@ class PathRemoteDataSourceImpl implements PathRemoteDataSource {
   PathRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<PathTaskModel>> getTasks() async {
-    final response = await dio.get('/flutter/api');
+  Future<List<PathTaskModel>> getTasks(String apiUrl) async {
+    final uri = ApiClient.buildApiUri(apiUrl);
+
+    final response = await dio.getUri(uri);
 
     final apiResponse = ApiResponseModel<List<PathTaskModel>>.fromJson(
       response.data as Map<String, dynamic>,
@@ -43,10 +47,13 @@ class PathRemoteDataSourceImpl implements PathRemoteDataSource {
 
   @override
   Future<List<SubmissionResultModel>> submitResults(
+    String apiUrl,
     List<PathResultModel> results,
   ) async {
-    final response = await dio.post(
-      '/flutter/api',
+    final uri = ApiClient.buildApiUri(apiUrl);
+
+    final response = await dio.postUri(
+      uri,
       data: results.map((result) => result.toJson()).toList(),
     );
 
