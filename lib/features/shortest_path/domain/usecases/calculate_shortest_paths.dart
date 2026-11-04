@@ -7,10 +7,10 @@ class CalculateShortestPaths {
 
   CalculateShortestPaths(this.pathFinder);
 
-  List<PathResult> call(
+  Future<List<PathResult>> call(
     List<PathTask> tasks, {
     void Function(double progress)? onProgress,
-  }) {
+  }) async {
     final results = <PathResult>[];
 
     for (var i = 0; i < tasks.length; i++) {
@@ -26,6 +26,8 @@ class CalculateShortestPaths {
       );
 
       onProgress?.call((i + 1) / tasks.length);
+
+      await Future<void>.delayed(Duration.zero);
     }
 
     return results;
